@@ -14,6 +14,10 @@ The data has 3 tables - users, brands. amd receipts. Based on the dataset schema
 
 ## Second Task: Write queries that directly answer predetermined questions from a business stakeholder
 
+- Dialect Used: MySQL
+- You can use the SQL dump file to ensure data integrity before testing the queries.
+- After the data is imported for users, brands, receipts, and items, You can run the fetch-queries.sql file in one go to display all the outputs.
+
 ### **Question 1**: What are the top 5 brands by receipts scanned for most recent month?
 
 - **Approach:** 
@@ -75,8 +79,9 @@ The data has 3 tables - users, brands. amd receipts. Based on the dataset schema
 
 # Third Task: Evaluate Data Quality Issues in the Data Provided
 
-- Language of choice: Python
+- Language of choice: Python3
 - Libraries used: JSON, Pandas, NumPy
+- You can directly run this notebook. Only the original json files are required along with the JSON, Pandas, and NumPy libraries.
 
 ## **Users** Table
 #### JSON to CSV:
@@ -151,3 +156,56 @@ The data has 3 tables - users, brands. amd receipts. Based on the dataset schema
 - No cleaning was performed except some renaming of fields for easier access. 
 - Again, a foreign key relationship cannot be established with users and brands but we can point to specific userIds and brandCodes or barcodes.
 - There are inconsistencies between barcodes present in brands and the ones present in items. Is there are different subset of barcodes or is there any validation error?
+
+# Fourth Task: Communicate with Stakeholders:
+
+Dear Product/Business Leader,
+
+I have thoroughly analyzed the provided data and identified several data quality issues and concerns. Here are the key points:
+
+**Questions about the Data**:
+- Why do we have redundant user data with duplicate user IDs?
+- What caused the one account (userID 6008622ebe5fc9247bab4eb9) to become inactive?
+- Why and how are some users labeled as "fetch-staff"? What is the significance of this?
+- What are the other signup sources besides the ones present in the data?
+- What is the cause of missing lastLogin values for some users? Is this a data validation issue?
+- Why are there inconsistencies between barcodes present in the brands table and the items table?
+- What is the criteria for a brand to be considered a "topBrand"? Why are there NaN values listed as top brands?
+- Why are there dummy/test values present in the "name" column of the brands table?
+- There are many userIds and brandCodes/barcodes in the receipts table that are not present in the users and brands tables respectively. How can we establish proper relationships between these tables?
+
+**Data Quality Issues**:
+
+I discovered the data quality issues through a thorough data cleaning and exploration process. This involved:
+- Checking for missing values, duplicates, and inconsistencies across all tables.
+- Examining the data types (especially for date type columns that were in unix timestamp and converted them to human readable format) and formats of columns to ensure consistency.
+- Analyzing the relationships and dependencies between tables to identify potential issues with foreign key constraints. This can be seen in receipts 
+table where certain users and brands appear in the receipts, that are not present in either users and brands tables
+- Investigating outliers and anomalies in the data. What caused a significant rise in points gained for some users. Is there are relationship between any columns that resulted in this?
+
+**Resolving Data Quality Issues**:
+
+To resolve the identified data quality issues, we need:
+- Clear documentation and understanding of the data sources, collection processes (signup sources, login dates, calculation of points, etc.), and business rules (user roles, topBrand calculations, partners, brand categorization, etc.).
+- The data seems to be of NoSQL type since the source was in JSON format. What kind of data model is used for the creation of this data?
+- Collaboration with subject matter experts to clarify ambiguities and validate assumptions made for this data analysis.
+- Established data governance policies and procedures for data validation, cleansing, and standardization.
+- Robust data quality monitoring and reporting mechanisms to identify and address issues proactively.
+
+**Optimizing Data Assets**:
+- Detailed business requirements and use cases for the data. This might include "what is needed from this data"? "Where is it stored?"
+- Noting the performance and scalability requirements for the intended applications or analytics. 
+- Data privacy and security considerations. Are we following the rules and are compliant with the regulations for data privacy and security of the users?
+- Existing data infrastructure and technology stack to assess integration and compatibility.
+- Certain automations can be performed to ensure data validation.
+
+**Performance and Scaling Concerns**:
+- Implementing efficient indexing strategies (for easier row access) for frequently queried columns and joins.
+- Partitioning/Normalizing large tables based on access patterns or data distribution. This can be done for tables that are not frequently queried and are very large.
+- Caching frequently accessed data (lastLogin details, topBrands) or query results to reduce database load.
+- Leveraging distributed computing frameworks or cloud-based solutions for scalability.
+
+I hope this information provides a comprehensive overview of the data quality issues, concerns, and potential solutions. Please let me know if you need any further clarification or have additional requirements.
+
+Best regards,
+Hiren Rupchandani
