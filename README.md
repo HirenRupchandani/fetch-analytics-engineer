@@ -148,3 +148,5 @@ The data has 3 tables - users, brands. amd receipts. Based on the dataset schema
 ### Items Table (Derived from Receipts)
 - No cleaning was performed except some renaming of fields for easier access. 
 - Again, a foreign key relationship cannot be established with users and brands but we can point to specific userIds and brandCodes or barcodes.
+- There are inconsistencies between barcodes present in brands and the ones present in items. Is there are different subset of barcodes or is there any validation error?
+- There are inconsistencies between barcodes present in brands and the ones present in items. Is there are different subset of barcodes or is there any validation error?
