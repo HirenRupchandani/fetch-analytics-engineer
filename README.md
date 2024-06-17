@@ -1,5 +1,5 @@
 # fetch-analytics-engineer-takehome-assessment
-A Take Home Assessment designed by Fetch Rewards.
+A Take Home Assessment designed by Fetch Rewards for the Analytics Engineer Position.
 
 ## First Task: Review Existing Unstructured Data and Diagram a New Structured Relational Data Model
 The data has 3 tables - users, brands. amd receipts. Based on the dataset schema provided, here is how the relation can be formed between these 3 tables:
