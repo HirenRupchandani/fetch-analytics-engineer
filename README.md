@@ -1,5 +1,17 @@
 # fetch-analytics-engineer-takehome-assessment
 A Take Home Assessment designed by Fetch Rewards.
+
+## First Task: Review Existing Unstructured Data and Diagram a New Structured Relational Data Model
+The data has 3 tables - users, brands. amd receipts. Based on the dataset schema provided, here is how the relation can be formed between these 3 tables:
+- User's _id$oid key can be set as a foreign key in receipts using the userId key. 
+- This relation can be defined as a one to many cardinality relation as a user can have multiple receipts.
+- Brand's brandCode key can be set as a foreign key in receipts using the rewardsReceiptItemList.brandCode or rewardsReceiptItemList.barcode keys.
+- This relation can also be defined as a one to many cardinality relation as a brand can be bought multiple times so it can appear in many receipts many times.
+- rewardsReceiptItemList can be imagined as a separate derived table that has many fields withing itself. In this derived table, we can use receipts._id and receipts.userId to refer to this table for all the items in each receipt. 
+- We can't form any direct relation between users and brands.
+- Here is a simplified and structured diagram of the said tables:
+![ER Diagram](https://raw.githubusercontent.com/HirenRupchandani/fetch-analytics-engineer/main/ERDiagram.png)
+
 ## Second Task: Write queries that directly answer predetermined questions from a business stakeholder
 
 ### **Question 1**: What are the top 5 brands by receipts scanned for most recent month?
@@ -60,3 +72,79 @@ A Take Home Assessment designed by Fetch Rewards.
 
 **Observation:**
 - Hy-Vee has the most transactions across all the users created in the last 6 months.
+
+# Third Task: Evaluate Data Quality Issues in the Data Provided
+
+- Language of choice: Python
+- Libraries used: JSON, Pandas, NumPy
+
+## **Users** Table
+#### JSON to CSV:
+- The data was read using json library and normalized using pandas. This helped in extracting the nested fields that are set as the columns of the table.
+- Date columns are casted to appropriate datetime data type and empty dates are replaced by empty string.
+- The dataframe is saved as a CSV file
+
+#### Data Cleaning:
+- On the first glance, we can see the id, active status, role, signUpSource, createdDate, and lastLogin fields. These are self explanatory but can be explored further.
+- There are 495 rows but a lot of them are duplicates. There are just 212 unique user IDs. 
+- There are some fields with missing values such as signUpSource, state, amd lastLogin.
+
+- Correcting the Date columns into proper format: '%Y-%m-%d %H:%M:%S.%f' and filling the lastlogin column using 2 strategies:
+1. If a user ID is repeated, check if other rows of the same user ID have a lastlogin value, if yes, use that value.
+2. If a user IDs all instances have lastlogin as NULL, fill the value with the created date as the user must be logged in for the first time when the account was created.
+- Filling the missing values in singUpSource and state using the same strategy 1 as lastLogin. But none of the cells got filled using this strategy
+- There are plenty observations noted in the `fetch-data-cleaning.ipynb` notebook or `fetch-data-cleaning.pdf` such as one account being inactive and presence of fetch-staff in users.
+
+#### Questions/Concerns:
+- Why do we have redundant user data?
+- What caused the one account of the userID `6008622ebe5fc9247bab4eb9` to go inactive?
+- Why and how are some of the users fetch-staff?
+- What are the other signup sources?
+- What is the cause of lastLogin being a missing value? Is this a data validation problem?
+
+
+## **Brands** Table
+#### JSON to CSV:
+- Similar strategy used just like Users. Just renamed some columns for easier readability and reference.
+- Saved teh dataframe as a CSV file.
+
+#### Data Cleaning:
+- There are many missing values in this table but thankfully, no duplicated rows.
+- Since there are string values in this dataset, I removed the leading and trailing spaces that might cause some mismatch during the queries.
+- There were missing values in topBrand which lead to an assumption: 
+-- I am listing NULL topBrands as False. Because if they were important to be noted as Top Brand, the value should have been present.
+- Also performed some type casting to int for topBrands for easier data import in MySQL.
+- Assuming Categories have corresponding category codeand since a lot of category codes are missing, I have filled those codes with corresponding category's mode.
+
+#### Questions/Concerns:
+- barcode is self-explanatory but there seem to be no clear distinction between the category and categoryCode columns.
+- Similarly, there is a name overlap between name and brandCode.
+- It is understood that the brandCode is under the umbrella of category/categoryCode.
+- TopBrand indicates what a popular or top brand might be but what is the criteria for a brand to become topBrand?
+- There are some NaNs listed as top brands. What is the reason for this inconsistency?
+- name has a lot of dummy/test values. It would be helpful to get a source/reason for these values.
+- It can be observed that the test brand names are not listed as top brands.
+- A clear distinction between these columns will give a good indication on how to use these columns efficiently.
+
+## **Receipts** Table
+#### JSON to CSV:
+- Similar strategy to the previous 2 tables. But this time, the rewardsReceiptItemList was normalized further into a derived table called items.
+- The derived table has 34 more fields and tells about the items in each receipt.
+
+#### Data Cleaning:
+- Not all the fields with null values are dealt with since it might change the meaning of some fields.
+- There are no duplicates in the table.
+- Performed some renaming of the columns to remove the `$` suffixes.
+- Casted the date based columns to datetime datatype.
+- Filled the null values of bonusPointsEarned and totalSpent to 0 and recasted them to FLOAT datatype for easier import into MySQL.
+- There are many other data cleaning steps that can be performed on this table, but given the business requirements, this much data cleaning is sufficient. Other cleaning steps can be performed as per the client's/stakeholder's requirements.
+
+#### Questions/Concerns:
+- There are many userIds and brandCodes/barcodes that are not present in the users and brands tables respectively. 
+- I would like to assume that we are given a subset of each table without any validation for the appropriate users and brands.
+- Since this inconsistency exists, a foreign key relation cannot be established between users and receipts as well as items and brands.
+- 
+
+### Items Table (Derived from Receipts)
+- No cleaning was performed except some renaming of fields for easier access. 
+- Again, a foreign key relationship cannot be established with users and brands but we can point to specific userIds and brandCodes or barcodes.
