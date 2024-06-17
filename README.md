@@ -137,13 +137,15 @@ The data has 3 tables - users, brands. amd receipts. Based on the dataset schema
 - Performed some renaming of the columns to remove the `$` suffixes.
 - Casted the date based columns to datetime datatype.
 - Filled the null values of bonusPointsEarned and totalSpent to 0 and recasted them to FLOAT datatype for easier import into MySQL.
+- The columns purchasedItemCount and bonusPointsEarned are skewed towards right as their mean is significantly higher than the median. This could be a result of the max values in both the columns being very high.
+- Removing the outlier from purchasedItemCount (689 items purchased in a single receipt!) results in a fairly symmetric distribution but the same approach does not work for bonusPointsEarned (has a high 75th percentile value and even higher maximum value as compared to the median value).
+- Perhaps some brands give more bonus points as compared to other brands? Does this **correlate** to these brands being **topBrands** in the brands table?
 - There are many other data cleaning steps that can be performed on this table, but given the business requirements, this much data cleaning is sufficient. Other cleaning steps can be performed as per the client's/stakeholder's requirements.
 
 #### Questions/Concerns:
 - There are many userIds and brandCodes/barcodes that are not present in the users and brands tables respectively. 
 - I would like to assume that we are given a subset of each table without any validation for the appropriate users and brands.
 - Since this inconsistency exists, a foreign key relation cannot be established between users and receipts as well as items and brands.
-- 
 
 ### Items Table (Derived from Receipts)
 - No cleaning was performed except some renaming of fields for easier access. 
