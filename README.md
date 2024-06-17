@@ -16,7 +16,7 @@ The data has 3 tables - users, brands. amd receipts. Based on the dataset schema
 
 - Dialect Used: MySQL
 - You can use the SQL dump file to ensure data integrity before testing the queries.
-- After the data is imported for users, brands, receipts, and items, You can run the fetch-queries.sql file in one go to display all the outputs.
+- After the data is imported for users, brands, receipts, and items, You can run the `fetch-queries - Task 2.sql` file in one go to display all the outputs.
 
 ### **Question 1**: What are the top 5 brands by receipts scanned for most recent month?
 
@@ -98,7 +98,7 @@ The data has 3 tables - users, brands. amd receipts. Based on the dataset schema
 1. If a user ID is repeated, check if other rows of the same user ID have a lastlogin value, if yes, use that value.
 2. If a user IDs all instances have lastlogin as NULL, fill the value with the created date as the user must be logged in for the first time when the account was created.
 - Filling the missing values in singUpSource and state using the same strategy 1 as lastLogin. But none of the cells got filled using this strategy
-- There are plenty observations noted in the `fetch-data-cleaning.ipynb` notebook or `fetch-data-cleaning.pdf` such as one account being inactive and presence of fetch-staff in users.
+- There are plenty observations noted in the `fetch_data_cleaning-Task3.ipynb` notebook or `fetch_data_cleaning-Task3.pdf` such as one account being inactive and presence of fetch-staff in users.
 
 #### Questions/Concerns:
 - Why do we have redundant user data?
